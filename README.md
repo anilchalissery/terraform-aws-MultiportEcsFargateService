@@ -1,8 +1,6 @@
 
 # MultiportECSWithTerraformModule
-``` A Anil Augustine Chalissery initiative ;)```
 
-The Aim is to provide variables values in env/prod/main.tf and create multiport ecs service with 2 ports.
 
 
 #sample env/prod/main.tf 
