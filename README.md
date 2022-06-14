@@ -7,7 +7,7 @@
 /
 ```
 module "example-prod-backend-service" {
-  source                 = "../../multiport-ecs"
+  source                 = "anilchalissery/MultiportEcsFargateService/aws"
   environment            = "example-prod"
   accountid              = "222222222222" 
   region                 = "us-east-1"
