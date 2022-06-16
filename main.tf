@@ -1,3 +1,7 @@
+data "aws_caller_identity" "current" {}
+data "aws_region" "current" {}
+
+
 // ecr, task def, and services
 
 resource "aws_ecr_repository" "ecr" {
@@ -39,7 +43,7 @@ resource "aws_ecs_task_definition" "task_def" {
       container_definitions =  <<EOF
 [{
 	"name": "${var.environment}-${var.name}",
-	"image": "${var.accountid}.dkr.ecr.${var.region}.amazonaws.com/${var.environment}-${var.name}:latest",
+	"image": "${data.aws_caller_identity.current.account_id}.dkr.ecr.${data.aws_region.current.name}.amazonaws.com/${var.environment}-${var.name}:latest",
 	"portMappings": [
 	  {
 		"containerPort": ${var.container_port1},
@@ -58,7 +62,7 @@ resource "aws_ecs_task_definition" "task_def" {
 	  "logDriver": "awslogs",
 	  "options": {
 		  "awslogs-group": "/ecs/${var.environment}-${var.name}",
-          "awslogs-region": "${var.region}",
+          "awslogs-region": "${data.aws_region.current.name}",
           "awslogs-stream-prefix": "ecs"
 	  }
 	}
@@ -78,7 +82,7 @@ resource "aws_lb_target_group" "target_group1" {
   deregistration_delay = 30
   health_check {
   path = var.health_check_path
-  matcher = var.health_check_code
+  matcher = "${var.health_check_code}"
   }
 }
 
@@ -92,7 +96,7 @@ resource "aws_lb_target_group" "target_group2" {
   health_check {
   port = var.container_port1
   path = var.health_check_path
-  matcher = var.health_check_code
+  matcher = "${var.health_check_code}"
   }
 }
 
